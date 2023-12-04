@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   import CloseBtn from "./CloseBtn.svelte";
 
@@ -15,6 +15,8 @@
   export let adSlot = "";
   export let adClient = "";
 
+  let adsElement: HTMLElement;
+
   $: containerStyle = `
     width: ${width}px;
     height: ${height}px;
@@ -26,10 +28,37 @@
 
   let isVisible = false;
 
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      const { type, attributeName } = mutation;
+
+      if (type === "attributes" && attributeName === "data-ad-status") {
+        const adStatus = (
+          mutation.target as HTMLElement
+        ).attributes.getNamedItem("data-ad-status")?.value;
+
+        if (adStatus === "unfilled") {
+          isVisible = false;
+          break;
+        }
+      }
+    }
+  });
+
   onMount(() => {
+    // @ts-ignore
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+
     setTimeout(() => {
       isVisible = true; // Set to false if ad fails to load
+      observer.observe(adsElement, {
+        attributes: true,
+      });
     }, 1000); // Simulated load time
+  });
+
+  onDestroy(() => {
+    observer.disconnect();
   });
 
   function closeAd() {
@@ -49,8 +78,8 @@
     data-ad-client={adClient}
     data-ad-slot={adSlot}
     data-ad-layout-key={adLayoutKey}
-    data-ad-format="auto"
     data-full-width-responsive="true"
+    bind:this={adsElement}
   ></ins>
 </div>
 
