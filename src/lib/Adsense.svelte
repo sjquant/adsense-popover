@@ -1,11 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
+  import CloseBtn from "./CloseBtn.svelte";
+
   export let width = 420;
   export let height = 140;
   export let offsetX = 16;
   export let offsetY = 16;
   export let animationDuration = 0.5;
+  export let horizontalPosition: "left" | "right" = "right";
+  export let verticalPosition: "bottom" | "top" = "bottom";
 
   export let adLayoutKey = "";
   export let adSlot = "";
@@ -14,8 +18,9 @@
   $: containerStyle = `
     width: ${width}px;
     height: ${height}px;
-    right: ${offsetX}px;
-    bottom: ${offsetY}px;
+    ${horizontalPosition}: ${offsetX}px;
+    ${verticalPosition}: ${offsetY}px;
+    transform: translateY(${verticalPosition === "bottom" ? 50 : -50}%);
     transition-duration: ${animationDuration}s;
   `;
 
@@ -36,7 +41,9 @@
   class={`ad-container ${isVisible ? "visible" : ""}`}
   style={containerStyle}
 >
-  <button on:click={closeAd} class="close-btn">x</button>
+  <div class="close-btn">
+    <CloseBtn onClick={closeAd} />
+  </div>
   <ins
     class="adsbygoogle"
     data-ad-client={adClient}
@@ -51,9 +58,7 @@
   .ad-container {
     position: fixed;
     padding: 8px;
-    transform: translateY(50%);
     visibility: hidden;
-    background-color: #eaeaea;
     box-shadow: 0 2px 8px hsla(0, 0%, 0%, 0.22);
     border-radius: 4px;
     opacity: 0;
@@ -63,15 +68,9 @@
     position: absolute;
     top: 8px;
     right: 8px;
-    padding: 0;
     background-color: #fff;
-    border: none;
-    border-radius: 0px;
-    outline: none;
     cursor: pointer;
-    font-size: 16px;
-    width: 24px;
-    height: 24px;
+    padding: 4px;
   }
 
   .close-btn:hover {
@@ -79,7 +78,7 @@
   }
 
   .visible {
-    transform: translateY(0);
+    transform: translateY(0) !important;
     opacity: 1;
     visibility: visible;
   }
