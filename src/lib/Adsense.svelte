@@ -17,7 +17,7 @@
   export let offsetX = 16;
   export let offsetY = 16;
   export let animationDuration = 0.5;
-  export let horizontalPosition: "left" | "right" | "center" = "right";
+  export let horizontalPosition: "left" | "right" = "right";
   export let verticalPosition: "bottom" | "top" = "bottom";
   export let timeout = 2000;
 
@@ -35,13 +35,7 @@
   height: ${height}px;
   ${verticalPosition}: ${offsetY}px;
   transition-duration: ${animationDuration}s;
-  ${
-    horizontalPosition === "center"
-      ? `left: calc(50% - ${width}/2);`
-      : horizontalPosition === "left"
-        ? `left: ${offsetX}px;`
-        : `right: ${offsetX}px;`
-  }
+  ${horizontalPosition}: ${offsetX}px;
   transform: translateY(${verticalPosition === "bottom" ? 50 : -50}%);
   padding: ${padding}px;
 `;
