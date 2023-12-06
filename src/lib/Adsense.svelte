@@ -1,30 +1,54 @@
+<svelte:options
+  customElement={{
+    tag: "adsense-popover",
+    shadow: "none",
+  }}
+/>
+
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
 
   import CloseBtn from "./CloseBtn.svelte";
 
-  export let width = 420;
+  // Container style
+  export let width = 360;
   export let height = 140;
+  export let padding = 8;
   export let offsetX = 16;
   export let offsetY = 16;
   export let animationDuration = 0.5;
-  export let horizontalPosition: "left" | "right" = "right";
+  export let horizontalPosition: "left" | "right" | "center" = "right";
   export let verticalPosition: "bottom" | "top" = "bottom";
+  export let timeout = 2000;
 
-  export let adLayoutKey = "";
-  export let adSlot = "";
-  export let adClient = "";
+  // Adsense Attributes
+  export let layoutKey = "";
+  export let slot = "";
+  export let client = "";
+  export let format = "auto";
+  export let responsive: "true" | "false" = "true";
 
   let adsElement: HTMLElement;
 
   $: containerStyle = `
-    width: ${width}px;
-    height: ${height}px;
-    ${horizontalPosition}: ${offsetX}px;
-    ${verticalPosition}: ${offsetY}px;
-    transform: translateY(${verticalPosition === "bottom" ? 50 : -50}%);
-    transition-duration: ${animationDuration}s;
-  `;
+  width: ${width}px;
+  height: ${height}px;
+  ${verticalPosition}: ${offsetY}px;
+  transition-duration: ${animationDuration}s;
+  ${
+    horizontalPosition === "center"
+      ? `left: calc(50% - ${width}/2);`
+      : horizontalPosition === "left"
+        ? `left: ${offsetX}px;`
+        : `right: ${offsetX}px;`
+  }
+  transform: translateY(${verticalPosition === "bottom" ? 50 : -50}%);
+  padding: ${padding}px;
+`;
+
+  $: btnStyle = `
+  margin: ${padding}px;
+`;
 
   let isVisible = false;
 
@@ -48,13 +72,13 @@
   onMount(() => {
     // @ts-ignore
     (window.adsbygoogle = window.adsbygoogle || []).push({});
+    observer.observe(adsElement, {
+      attributes: true,
+    });
 
     setTimeout(() => {
-      isVisible = true; // Set to false if ad fails to load
-      observer.observe(adsElement, {
-        attributes: true,
-      });
-    }, 1000); // Simulated load time
+      isVisible = true;
+    }, timeout);
   });
 
   onDestroy(() => {
@@ -70,15 +94,16 @@
   class={`ad-container ${isVisible ? "visible" : ""}`}
   style={containerStyle}
 >
-  <div class="close-btn">
+  <div class="close-btn" style={btnStyle}>
     <CloseBtn onClick={closeAd} />
   </div>
   <ins
     class="adsbygoogle"
-    data-ad-client={adClient}
-    data-ad-slot={adSlot}
-    data-ad-layout-key={adLayoutKey}
-    data-full-width-responsive="true"
+    data-ad-client={client}
+    data-ad-slot={slot}
+    data-ad-layout-key={layoutKey}
+    data-ad-format={format}
+    data-full-width-responsive={responsive}
     bind:this={adsElement}
   ></ins>
 </div>
@@ -86,20 +111,22 @@
 <style>
   .ad-container {
     position: fixed;
-    padding: 8px;
     visibility: hidden;
     box-shadow: 0 2px 8px hsla(0, 0%, 0%, 0.22);
     border-radius: 4px;
     opacity: 0;
+    background-color: #fff;
+    z-index: 9999;
   }
 
   .close-btn {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    z-index: 1;
+    color: #000;
     background-color: #fff;
     cursor: pointer;
-    padding: 4px;
+    top: 0;
+    right: 0;
   }
 
   .close-btn:hover {
@@ -114,7 +141,6 @@
 
   .adsbygoogle {
     display: block;
-    height: 124px;
     background-color: #fff;
   }
 
