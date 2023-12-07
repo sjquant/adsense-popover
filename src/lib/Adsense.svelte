@@ -11,13 +11,13 @@
   import CloseBtn from "./CloseBtn.svelte";
 
   // Container style
-  export let width = 360;
+  export let width = 400;
   export let height = 140;
   export let padding = 8;
   export let offsetX = 16;
   export let offsetY = 16;
   export let animationDuration = 0.5;
-  export let horizontalPosition: "left" | "right" = "right";
+  export let horizontalPosition: "left" | "right" | "center" = "right";
   export let verticalPosition: "bottom" | "top" = "bottom";
   export let timeout = 2000;
 
@@ -35,7 +35,11 @@
   height: ${height}px;
   ${verticalPosition}: ${offsetY}px;
   transition-duration: ${animationDuration}s;
-  ${horizontalPosition}: ${offsetX}px;
+  ${
+    horizontalPosition === "center"
+      ? `left: calc(50% - ${width / 2})px`
+      : `${horizontalPosition}: ${offsetX}px`
+  };
   transform: translateY(${verticalPosition === "bottom" ? 50 : -50}%);
   padding: ${padding}px;
 `;
@@ -71,7 +75,13 @@
     });
 
     setTimeout(() => {
-      isVisible = true;
+      const adsStatus =
+        adsElement.attributes.getNamedItem("data-ad-status")?.value;
+      if (adsStatus === "unfilled") {
+        isVisible = false;
+      } else {
+        isVisible = true;
+      }
     }, timeout);
   });
 
@@ -85,7 +95,7 @@
 </script>
 
 <div
-  class={`ad-container ${isVisible ? "visible" : ""}`}
+  class={`adsense-popover__container ${isVisible ? "visible" : ""}`}
   style={containerStyle}
 >
   <div class="close-btn" style={btnStyle}>
@@ -103,7 +113,7 @@
 </div>
 
 <style>
-  .ad-container {
+  .adsense-popover__container {
     position: fixed;
     visibility: hidden;
     box-shadow: 0 2px 8px hsla(0, 0%, 0%, 0.22);
@@ -113,7 +123,13 @@
     z-index: 9999;
   }
 
-  .close-btn {
+  .adsense-popover__container.visible {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0) !important;
+  }
+
+  .adsense-popover__container .close-btn {
     position: absolute;
     z-index: 1;
     color: #000;
@@ -123,14 +139,8 @@
     right: 0;
   }
 
-  .close-btn:hover {
+  .adsense-popover__container .close-btn:hover {
     background-color: #f5f5f5;
-  }
-
-  .visible {
-    transform: translateY(0) !important;
-    opacity: 1;
-    visibility: visible;
   }
 
   .adsbygoogle {
