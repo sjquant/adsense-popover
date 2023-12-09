@@ -95,7 +95,7 @@
 </script>
 
 <div
-  class={`adsense-popover__container ${isVisible ? "visible" : ""}`}
+  class={`adsense-popover ${isVisible ? "visible" : ""}`}
   style={containerStyle}
 >
   <div class="close-btn" style={btnStyle}>
@@ -113,7 +113,7 @@
 </div>
 
 <style>
-  .adsense-popover__container {
+  .adsense-popover {
     position: fixed;
     visibility: hidden;
     box-shadow: 0 2px 8px hsla(0, 0%, 0%, 0.22);
@@ -123,13 +123,13 @@
     z-index: 9999;
   }
 
-  .adsense-popover__container.visible {
+  .adsense-popover.visible {
     visibility: visible;
     opacity: 1;
     transform: translateY(0) !important;
   }
 
-  .adsense-popover__container .close-btn {
+  .adsense-popover .close-btn {
     position: absolute;
     z-index: 1;
     color: #000;
@@ -139,7 +139,7 @@
     right: 0;
   }
 
-  .adsense-popover__container .close-btn:hover {
+  .adsense-popover .close-btn:hover {
     background-color: #f5f5f5;
   }
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import svelteLogo from "./assets/svelte.svg";
   import viteLogo from "/vite.svg";
-  import Adsense from "./lib/Adsense.svelte";
+  import Adsense from "./components/Adsense.svelte";
 </script>
 
 <main>
