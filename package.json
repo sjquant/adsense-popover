@@ -1,8 +1,12 @@
 {
   "name": "adsense-popover",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "author": {
+    "name": "Seonu Jang",
+    "email": "seonujang@gmail.com"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

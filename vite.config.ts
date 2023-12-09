@@ -12,13 +12,14 @@ export default defineConfig({
         customElement: true,
       },
     }),
+    copyrightNotice(),
     minifyEs(),
   ],
   build: {
     outDir: "dist",
     emptyOutDir: true,
     lib: {
-      entry: "src/lib/index.ts",
+      entry: "src/components/index.ts",
       formats: bundleComponents ? (["es", "esm", "umd"] as any) : ["es"],
       name: pkg.name.replace(/-./g, (char) => char[1].toUpperCase()),
       fileName: (format) =>
@@ -54,6 +55,22 @@ function minifyEs() {
         }
         return code;
       },
+    },
+  };
+}
+
+function copyrightNotice() {
+  return {
+    name: "copyright-notice",
+    renderChunk(code) {
+      const copyright = `/*! 
+Copyright (c) 2023 sjquant. All rights reserved.
+
+This software is part of the adsense-popover project: https://github.com/sjquant/adsense-popover
+
+Licensed under the MIT License. See the LICENSE file in the project root for full license information.
+*/\n`;
+      return `${copyright}${code}`;
     },
   };
 }
