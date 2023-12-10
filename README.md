@@ -1,47 +1,76 @@
-# Svelte + TS + Vite
+# Adsense Popover
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+## What is 'Adsense Popover'?
 
-## Recommended IDE Setup
+Adsense-Popover is a custom element web component that displays Google AdSense in a slide-over format. This approach allows you to show ads without disrupting the content area, making it a subtle yet effective way to catch user attention.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+![Adsense-Popover.gif](images/adsense-popover-1.gif)
 
-## Need an official Svelte framework?
+## Why Use 'Adsense Popover'?
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+- **Non-intrusive**: Display ads without compromising your content's integrity.
+- **Engaging**: The slide-over format is more likely to draw user attention.
 
-## Technical considerations
+## How to Use?
 
-**Why use this over SvelteKit?**
+1. **Include the Script**: Add the following code inside the `<head>` tag of your HTML document.
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+   ```html
+   <head>
+     ...
+     <!-- Adsense-Popover -->
+     <script
+       type="module"
+       src="https://cdn.jsdelivr.net/gh/sjquant/adsense-popover@v0.1.0/dist/adsense-popover.min.js"
+     ></script>
+   </head>
+   ```
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+2. **Place the Element**: Insert the `adsense-popover` element anywhere within the `<body>` tag.
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+   ```html
+   <body>
+     <adsense-popover
+       layoutKey="<your-layout-key>"
+       client="<your-client>"
+       slot="<your-slot>"
+       format="<your-format>"
+     ></adsense-popover>
+     ...
+   </body>
+   ```
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+## Options
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+Here are the customizable options for 'Adsense Popover', with detailed explanations for each:
 
-**Why include `.vscode/extensions.json`?**
+| Option             | Default Value | Description                                                                                                                                                                          |
+| ------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| width              | 400           | Width of the popover in pixels.                                                                                                                                                      |
+| height             | 140           | Height of the popover in pixels.                                                                                                                                                     |
+| padding            | 8             | Padding inside the popover in pixels.                                                                                                                                                |
+| offsetX            | 16            | Horizontal offset from the edge in pixels.                                                                                                                                           |
+| offsetY            | 16            | Vertical offset from the bottom in pixels.                                                                                                                                           |
+| animationDuration  | 0.5           | Duration of the slide-over animation.                                                                                                                                                |
+| horizontalPosition | "right"       | Determines the horizontal alignment of the popover on the screen. Options are "left", "right", or "center". For example, "right" aligns the popover to the right edge of the screen. |
+| verticalPosition   | "bottom"      | Determines the vertical alignment of the popover on the screen. Options are "bottom" or "top". For example, "bottom" aligns the popover to the bottom edge of the screen.            |
+| timeout            | 2000          | Delay before the popover appears in ms.                                                                                                                                              |
+| layoutKey          | ""            | AdSense layout key.                                                                                                                                                                  |
+| slot               | ""            | AdSense slot.                                                                                                                                                                        |
+| client             | ""            | AdSense client ID.                                                                                                                                                                   |
+| format             | "auto"        | Ad format, e.g., "auto", "fluid".                                                                                                                                                    |
+| responsive         | "true"        | Whether the ad is responsive.                                                                                                                                                        |
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+## Q&A
 
-**Why enable `allowJs` in the TS template?**
+1. **Do I need Google AdSense?**
 
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
+   Yes, you need to have Google AdSense approval and set up AdSense on your site.
 
-**Why is HMR not preserving my local component state?**
+2. **How do I find Adsense Attributes?**
 
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
+   In AdSense, create an 'In-feed ad' under 'Ads' → 'Ad units'. You'll find a code snippet with attributes starting with `data-`. Copy these values for `layoutKey`, `client`, `slot`, and `format`.
 
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
+## License
 
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
-```
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
