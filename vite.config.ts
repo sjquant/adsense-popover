@@ -3,8 +3,6 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { transform } from "esbuild";
 import pkg from "./package.json";
 
-const bundleComponents = process.env.BUNDLE_COMPONENTS ?? true;
-
 export default defineConfig({
   plugins: [
     svelte({
@@ -20,7 +18,7 @@ export default defineConfig({
     emptyOutDir: true,
     lib: {
       entry: "src/components/index.ts",
-      formats: bundleComponents ? (["es", "esm", "umd"] as any) : ["es"],
+      formats: ["es", "esm", "umd"] as any,
       name: pkg.name.replace(/-./g, (char) => char[1].toUpperCase()),
       fileName: (format) =>
         ({
@@ -28,15 +26,6 @@ export default defineConfig({
           esm: `${pkg.name}.min.js`,
           umd: `${pkg.name}.umd.js`,
         }[format]),
-    },
-    rollupOptions: {
-      output: bundleComponents
-        ? {}
-        : {
-            inlineDynamicImports: false,
-            chunkFileNames: "[name].js",
-            manualChunks: { svelte: ["svelte"] },
-          },
     },
   },
 });
@@ -49,7 +38,7 @@ function minifyEs() {
       async handler(code, chunk, outputOptions) {
         if (
           outputOptions.format === "es" &&
-          (!bundleComponents || chunk.fileName.endsWith(".min.js"))
+          chunk.fileName.endsWith(".min.js")
         ) {
           return await transform(code, { minify: true });
         }
